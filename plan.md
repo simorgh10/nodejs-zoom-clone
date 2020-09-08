@@ -1,8 +1,9 @@
 # Plan of Action
 
-- Initialze our project
-- Initialize our first view
-- Add the ablity to view our video
+- Initialze our project DONE
+- Initialize our first view DONE
+- Create a roomId DONE
+- Add the ablity to view our video DONE
 - Add the ability to allow others stream their video
 - Add styling
 - Add he ability to create messages
