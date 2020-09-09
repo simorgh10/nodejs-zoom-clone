@@ -8,11 +8,13 @@ const socket = io('/');
 const videoGrid = document.getElementById('video-grid');
 const myVideo = document.createElement('video');
 myVideo.muted = true;
+let myVideoStream;
 
 navigator.mediaDevices.getUserMedia({
     video : true,
-    audio : false
+    audio : true
 }).then(stream => {
+    myVideoStream = stream;
     appendVideoStream(myVideo, stream);
     peer.on('call', call => {
         call.answer(stream);
@@ -73,7 +75,7 @@ function addNewMessage(userId, message) {
 
 const scrollToBottom = () => {
     let chatWindow = document.getElementById('chat-window');
-    chatWindow.scrollTop = chatWindow.scrollHeight - chatWindow.clientHeight;
+    chatWindow.scrollTop = chatWindow.scrollHeight;
 };
 
 // const getUserMedia2 = (navigator.mozGetUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia).bind(navigator);
@@ -81,3 +83,66 @@ const scrollToBottom = () => {
 //     video : true,
 //     audio : true
 // }, stream => appendVideoStream(myVideo, stream), err => {});
+
+const muteUnmute = () => {
+    const enabled = myVideoStream.getAudioTracks()[0].enabled;
+    if (enabled) {
+        myVideoStream.getAudioTracks()[0].enabled = false;
+        setToMuteButton();
+    } else {
+        myVideoStream.getAudioTracks()[0].enabled = true;
+        setToUnmuteButton();
+    }
+}
+
+const stopPlayVideo = () => {
+    const enabled = myVideoStream.getVideoTracks()[0].enabled;
+    if (enabled) {
+        myVideoStream.getVideoTracks()[0].enabled = false;
+        setVideoStopped();
+    } else {
+        myVideoStream.getVideoTracks()[0].enabled = true;
+        setVideoPlayed();
+    }
+}
+
+const setVideoStopped = () => {
+    let muteButton = document.getElementById('stop-button');
+    let muteIcon = muteButton.getElementsByTagName('i')[0];
+    let muteText = muteButton.getElementsByTagName('span')[0];
+    muteIcon.classList.remove("fa-video");
+    muteIcon.classList.add("fa-video-slash");
+    muteText.innerHTML = 'Play Video';
+    muteButton.classList.add("play-video");
+};
+
+const setVideoPlayed = () => {
+    let muteButton = document.getElementById('stop-button');
+    let muteIcon = muteButton.getElementsByTagName('i')[0];
+    let muteText = muteButton.getElementsByTagName('span')[0];
+    muteIcon.classList.add("fa-video");
+    muteIcon.classList.remove("fa-video-slash");
+    muteText.innerHTML = 'Stop Video';
+    muteButton.classList.remove("play-video");
+};
+
+const setToMuteButton = () => {
+    let muteButton = document.getElementById('mute-button');
+    let muteIcon = muteButton.getElementsByTagName('i')[0];
+    let muteText = muteButton.getElementsByTagName('span')[0];
+    muteIcon.classList.remove("fa-microphone");
+    muteIcon.classList.add("fa-microphone-slash");
+    muteButton.classList.add("unmute");
+    muteText.innerHTML = 'Unmute';
+    //<i class="fas fa-microphone-slash"></i>
+};
+
+const setToUnmuteButton = () => {
+    let muteButton = document.getElementById('mute-button');
+    let muteIcon = muteButton.getElementsByTagName('i')[0];
+    let muteText = muteButton.getElementsByTagName('span')[0];
+    muteIcon.classList.add("fa-microphone");
+    muteIcon.classList.remove("fa-microphone-slash");
+    muteButton.classList.remove("unmute");
+    muteText.innerHTML = 'Mute';
+};
