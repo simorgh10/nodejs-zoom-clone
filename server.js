@@ -22,7 +22,11 @@ io.on('connection', (socket) => {
    socket.on('join-room', (roomId, userId) => {
       socket.join(roomId);
       socket.to(roomId).emit('user-connected', userId);
-   })
+      socket.on('message', (roomId, userId, message) => {
+         console.log("message received", message);
+         socket.to(roomId).broadcast.emit('create-message', userId, message);
+      });
+   });
 });
 
 server.listen(3030);

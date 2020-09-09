@@ -38,6 +38,12 @@ body {
 
 .main__chat_window {
     flex-grow: 1;
+    overflow-y: scroll;
+    scrollbar-color: #242324;
+}
+
+.messages {
+    color: white;
 }
 
 .main__message_container {
